@@ -18,6 +18,8 @@ import com.androidprojects.bikestation.model.BikeStationDetails
 import com.androidprojects.bikestation.utility.Utility
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.math.roundToInt
@@ -107,15 +109,21 @@ class BikeStationViewModel(application: Application) : AndroidViewModel(applicat
                     loc2.latitude = latitude
                     loc2.longitude = longitude
 
+                    val latLongFrom = LatLng(userLocationLatitude, userLocationLongitude)
+                    val latLongTo = LatLng(latitude, longitude)
 
-                    val distance = loc1.distanceTo(loc2)
-                    val distanceInMeters = loc1.distanceTo(loc2).roundToInt()
+                    //val distance = loc1.distanceTo(loc2)
+                    //val distanceInMeters = loc1.distanceTo(loc2).roundToInt()
+
+                    val distanceInMeters = SphericalUtil.computeDistanceBetween(latLongFrom, latLongTo)
+
 
                     Log.v("ccpp_dis", " user lat"+ userLocationLatitude + "  user long" + userLocationLongitude)
                     Log.v("ccpp_dis", " bike lat"+ latitude + "  bike long" + longitude)
+                    Log.v("ccpp_dis1", userLocationLongitude.toString())
 
-
-                    var bikeStationDetails = BikeStationDetails(bikeStationID, latitude, longitude, distanceInMeters, freeRacks, bikes, label, bikeRacks)
+                    var bikeStationDetails = BikeStationDetails(bikeStationID, latitude, longitude,
+                        distanceInMeters.roundToInt(), freeRacks, bikes, label, bikeRacks)
 
                     bikeStationsArrayList.add(bikeStationDetails)
 
